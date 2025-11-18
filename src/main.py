@@ -1,14 +1,13 @@
-from machine import Pin
-from utime import sleep
+from machine import ADC , PWM , I2C, Pin
+import math, time
+from ads1x15 import ADS1015 
 
-pin = Pin("LED", Pin.OUT)
+# some config
 
-print("LED starts flashing...")
-while True:
-    try:
-        pin.toggle()
-        sleep(1) # sleep 1sec
-    except KeyboardInterrupt:
-        break
-pin.off()
-print("Finished.")
+pot_x = ADC(Pin(26))     
+pot_y = ADC(Pin(27)) 
+
+servo_shoulder = PWM(Pin(0))  
+servo_elbow    = PWM(Pin(1)) 
+
+# todo: migrate main logic from the file

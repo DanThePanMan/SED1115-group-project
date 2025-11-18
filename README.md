@@ -9,6 +9,8 @@
     pen state: bool (up or down)
     ```
 
+Talal did some rough code, and I(Daniel) implemented them into our project structure.
+
 ## control flow
 
 todo: do this
