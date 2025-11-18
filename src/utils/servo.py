@@ -1,7 +1,7 @@
 
 import math
 
-class servo():
+class Servo():
     
     MIN_PULSE_MS = 1.0     
     MAX_PULSE_MS = 2.0     
@@ -23,14 +23,14 @@ class servo():
         self.LINK2 = forearm_length
     
 
-    def convert_to_servo_angles(self, x_voltage, y_voltage):
+    def convert_to_servo_angles(self, x_measurement, y_measurement):
         """
         Convert X and Y voltages to servo angles for shoulder and elbow.
-        Input: float x_voltage, float y_voltage
+        Input: float x_measurement, float y_measurement
         Output: tuple (shoulder_angle, elbow_angle)
         Description: Uses trigonometric transformations to calculate servo angles.
         """
-        r2 = x_voltage*x_voltage + y_voltage*y_voltage 
+        r2 = x_measurement*x_measurement + y_measurement*y_measurement 
         c = (r2 - self.LINK_1*self.LINK_1 - self.LINK_2*self.LINK_2) / (2 * self.LINK_1 * self.LINK_2) 
 
         # unreachable positions
@@ -38,7 +38,7 @@ class servo():
             raise ValueError("point outside reach")
 
         beta = math.acos(c)
-        alpha = math.atan2(x_voltage, y_voltage) - math.atan2(self.LINK_2 * math.sin(beta), self.LINK_1 + self.LINK_2 * math.cos(beta))
+        alpha = math.atan2(x_measurement, y_measurement) - math.atan2(self.LINK_2 * math.sin(beta), self.LINK_1 + self.LINK_2 * math.cos(beta))
 
         return (math.degrees(alpha), math.degrees(beta))
 
@@ -60,7 +60,7 @@ class servo():
             duty_u16 = int(duty_fraction * 65535)   
             signals.append(duty_u16)
             
-        self.servo_shoulder(signals[0])
-        self.servo_elbow(signals[1])
+        self.servo_shoulder.duty_u16(signals[0])
+        self.servo_elbow.duty_u16(signals[1])
             
             

@@ -1,4 +1,4 @@
-class potentiometer():
+class Potentiometer():
     
     def __init__(self, pot_x, pot_y):
         """
