@@ -50,17 +50,3 @@ def control_pen(pen_state):
     duty = angle_to_duty(target_angle)
     pen_servo.duty_u16(duty)
 
-# Main loop - run this standalone on Pico
-if __name__ == "__main__":
-    print("Pen servo control starting...")
-    
-    while True:
-        # Pen down for 2 seconds
-        print("Pen DOWN")
-        control_pen(True)
-        time.sleep(2)
-        
-        # Pen up for 2 seconds
-        print("Pen UP")
-        control_pen(False)
-        time.sleep(2)
