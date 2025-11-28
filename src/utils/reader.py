@@ -11,7 +11,7 @@ class Potentiometer():
         self.pot_y = pot_y
         
 
-    def map_range(value, input_low, input_high, output_low, output_high):
+    def map_range(self, value, input_low, input_high, output_low, output_high):
         """
         Map a value from one range to another.
         Input: value, input_low, input_high, output_low, output_high
@@ -24,24 +24,23 @@ class Potentiometer():
         """
         Read the X-axis potentiometer value via ADC.
         Input: None
-        Output: float (voltage between 0-3.3V)
-        Description: Reads ADC channel connected to X-axis pot and returns voltage.
+        Output: float (x coordinate in mm on paper)
+        Description: Reads ADC channel connected to X-axis pot and returns x position in mm.
         """
         raw_x = self.pot_x.read_u16()
-        x_mm = self.map_range(raw_x, 0, 65535, 30 , 240)
-
-
+        # Map to paper coordinate range (0 to ~280mm along X)
+        x_mm = self.map_range(raw_x, 0, 65535, 0.0, 280.0)
         return x_mm
 
     def read_potentiometer_y(self):
         """
         Read the Y-axis potentiometer value via ADC.
         Input: None
-        Output: float (voltage between 0-3.3V)
-        Description: Reads ADC channel connected to Y-axis pot and returns voltage.
+        Output: float (y coordinate in mm on paper)
+        Description: Reads ADC channel connected to Y-axis pot and returns y position in mm.
         """
         raw_y = self.pot_y.read_u16()
-        y_mm = self.map_range(raw_y, 0, 65535, 40 ,200)
-        
+        # Map to paper coordinate range (0 to ~300mm along Y)
+        y_mm = self.map_range(raw_y, 0, 65535, 0.0, 300.0)
         return y_mm
 

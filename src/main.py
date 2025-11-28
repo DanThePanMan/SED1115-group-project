@@ -11,35 +11,33 @@ pot_y = ADC(Pin(27))
 servo_shoulder = PWM(Pin(0))  
 servo_elbow    = PWM(Pin(1)) 
 
-LINK_1 = 155    # upper arm length
-LINK_2 = 155    # forearm length
+LINK_1 = 155    # upper arm length (mm)
+LINK_2 = 155    # forearm length (mm)
 
-# todo: migrate main logic from the file
+
 # object init
 Servo = servo.Servo(servo_shoulder, servo_elbow, 50, LINK_1, LINK_2)
 reader = reader.Potentiometer(pot_x, pot_y)
 
+print("IK robot ready – moving with pots")
 
-# read potentiometer
-raw_x = reader.read_potentiometer_x()
-raw_y = reader.read_potentiometer_y()
+while True:
+    # read potentiometer
+    x_mm = reader.read_potentiometer_x()
+    y_mm = reader.read_potentiometer_y()
 
-# map potentimeter
-x_mm = reader.map_range(raw_x, 0, 65535, 30 , 240)
-y_mm = reader.map_range(raw_y, 0, 65535, 40 ,200)
+    try:
+        # IK to servo angles (now returns calibrated servo angles)
+        shoulder_deg, elbow_deg = Servo.convert_to_servo_angles(x_mm, y_mm)
 
+        # convert angles and drive arm
+        Servo.set_servo_angles(shoulder_deg, elbow_deg)
 
-try:
-    # IK to int angles
-    shoulder_deg, elbow_deg = Servo.convert_to_servo_angles(x_mm, y_mm)
+    except ValueError:
+        # Point is unreachable – just ignore this position
+        pass
 
-    # convert angles and drive arm
-    pwm_shoulder = Servo.set_servo_angles(shoulder_deg)
-    pwm_elbow    = Servo.set_servo_angles(elbow_deg)
-
-except ValueError:
-    print("Unreachable target:", x_mm, y_mm)
-
+    time.sleep(0.02)
+    
     # RC filter: measure filtered PWM voltage on AIN2
-
     # rc_volt = read_rc_voltage()
