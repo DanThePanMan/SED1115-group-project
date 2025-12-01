@@ -21,7 +21,22 @@ button = Pin(12)
 Servo = servo.Servo(servo_shoulder, servo_elbow, 50, LINK_1, LINK_2)
 reader = reader.Potentiometer(pot_x, pot_y)
 
-print("IK robot ready – moving with pots")
+print("ready")
+
+
+# rc filter code from pari project
+i2c = I2C(1, sda=Pin(14), scl=Pin(15))
+adc = ADS1015(i2c, 0x48, 1)
+adc_pwm_port = 2
+
+def read_rc_filter() -> int:
+    # no idea why the number is 1639, but that's the max 
+    # so scale the read value by the appropriate factor
+    adjusted = int(adc.read(0, adc_pwm_port) * (65535/1639))
+    if adjusted < 0: return 0
+    elif adjusted > 65535: return 65535
+    else: return adjusted
+
 
 while True:
     # read potentiometer
@@ -45,7 +60,7 @@ while True:
     else:  
         pen.control_pen(False)
 
-    # RC filter: measure filtered PWM voltage on AIN2
-    # rc_volt = read_rc_voltage()
+    rc_volt = read_rc_filter
+    print(rc_volt)
     
 
