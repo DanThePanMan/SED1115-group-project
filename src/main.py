@@ -15,7 +15,7 @@ servo_elbow    = PWM(Pin(1))
 LINK_1 = 155.0    # upper arm length (mm)
 LINK_2 = 157.0    # forearm length (mm)
 
-button = Pin(12)
+button = Pin(12, Pin.IN, Pin.PULL_DOWN)
 
 # object init
 Servo = servo.Servo(servo_shoulder, servo_elbow, 50, LINK_1, LINK_2)
@@ -23,6 +23,9 @@ reader = reader.Potentiometer(pot_x, pot_y)
 
 print("Normalized IK robot ready – pots → [0,1] → IK → servos")
 
+# Pen state tracking
+pen_state = False
+was_pressed = False
 
 # rc filter code 
 i2c = I2C(1, sda=Pin(14), scl=Pin(15))
@@ -64,11 +67,15 @@ while True:
 
     time.sleep(0.02)
     
-    # pen logic
-    if button.value() == 0:  
-        pen.control_pen(True)
-    else:  
-        pen.control_pen(False)
+    # pen logic - toggle on button press
+    current_button = button.value() == 1  # 1 = pressed with PULL_DOWN
+    
+    if current_button and not was_pressed:
+        pen_state = not pen_state
+        pen.control_pen(pen_state)
+        print(f"Button pressed! Pen state: {'DOWN' if pen_state else 'UP'}")
+    
+    was_pressed = current_button
 
     # RC filter feedback
     rc_volt = read_rc_filter()

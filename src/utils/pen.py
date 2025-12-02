@@ -7,8 +7,8 @@ MAX_PULSE_MS = 2.0    # 180 degrees
 PERIOD_MS    = 20.0   # 50 Hz
 
 # Pen angles
-PEN_UP_ANGLE   = 0    
-PEN_DOWN_ANGLE = 90   # placeholder values for now- test to see how far it needs to go
+PEN_UP_ANGLE   = 1   
+PEN_DOWN_ANGLE = 0   # placeholder values for now- test to see how far it needs to go
 
 # Initialize pen servo on pin 22
 pen_servo = PWM(Pin(22))
