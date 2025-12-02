@@ -77,6 +77,8 @@ while True:
     
     was_pressed = current_button
 
+        
+
     # RC filter feedback
     rc_volt = read_rc_filter()
     shoulder_feedback = v_to_angle_shoulder(rc_volt[0])
