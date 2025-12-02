@@ -24,23 +24,25 @@ class Potentiometer():
         """
         Read the X-axis potentiometer value via ADC.
         Input: None
-        Output: float (x coordinate in mm on paper)
-        Description: Reads ADC channel connected to X-axis pot and returns x position in mm.
+        Output: float (normalized x coordinate [0,1])
+        Description: Reads ADC channel connected to X-axis pot and returns normalized position.
+                    x_norm = 0 → right edge, x_norm = 1 → left edge
         """
         raw_x = self.pot_x.read_u16()
-        # Map to paper coordinate range (0 to ~280mm along X)
-        x_mm = self.map_range(raw_x, 0, 65535, 0.0, 280.0)
-        return x_mm
+        # Normalize to [0,1]
+        x_norm = raw_x / 65535.0
+        return x_norm
 
     def read_potentiometer_y(self):
         """
         Read the Y-axis potentiometer value via ADC.
         Input: None
-        Output: float (y coordinate in mm on paper)
-        Description: Reads ADC channel connected to Y-axis pot and returns y position in mm.
+        Output: float (normalized y coordinate [0,1])
+        Description: Reads ADC channel connected to Y-axis pot and returns normalized position.
+                    y_norm = 0 → top edge, y_norm = 1 → bottom edge
         """
         raw_y = self.pot_y.read_u16()
-        # Map to paper coordinate range (0 to ~300mm along Y)
-        y_mm = self.map_range(raw_y, 0, 65535, 0.0, 300.0)
-        return y_mm
+        # Normalize to [0,1]
+        y_norm = raw_y / 65535.0
+        return y_norm
 
